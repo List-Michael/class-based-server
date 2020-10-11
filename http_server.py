@@ -8,10 +8,10 @@ class HttpServer():
 
     @staticmethod
     def make_response(
-        code,
-        reason,
-        body=b"",
-        mimetype=b"text/plain"
+            code,
+            reason,
+            body=b"",
+            mimetype=b"text/plain"
     ):
         """
         returns a basic HTTP response
@@ -86,13 +86,15 @@ class HttpServer():
         """
 
         #Return text/html for any files that do not exist
-        if not os.path.exists(path):
+        webroot_path = 'webroot' + path
+        if not os.path.exists(webroot_path):
             return b"text/html"
 
         if path.endswith('/'):
             return b"text/plain"
 
-        return (mimetypes.guess_type(path))[0]
+        mimetype = mimetypes.guess_type(webroot_path)[0].encode()
+        return mimetype
 
     @staticmethod
     def get_content(path):
@@ -127,8 +129,28 @@ class HttpServer():
             # The file `webroot/a_page_that_doesnt_exist.html`) doesn't exist,
             # so this should raise a FileNotFoundError.
         """
+        webroot_path = 'webroot' + path
+        #print (('new webroot path is'))
+        #print(webroot_path)
 
-        return b"Not implemented!"  # TODO: Complete this function.
+        if not os.path.exists(webroot_path):
+            #return b"FileNotFoundError"
+            raise FileNotFoundError
+        
+        if os.path.isdir(webroot_path):
+            directory_listing = os.listdir(webroot_path)
+            str_dir = ''
+            for item in directory_listing:
+                str_dir += str(item) + ', '
+            
+            return str_dir.encode()
+
+        if os.path.isfile(webroot_path):
+            with open (webroot_path, 'rb') as file_object:
+                binary_file = file_object.read()
+            return binary_file
+        else:
+            return b"Not implemented!"
 
     def __init__(self, port):
         self.port = port
