@@ -54,8 +54,8 @@ class HttpServer():
 
         Then you would return "/images/sample_1.png"
         """
-
-        return "TODO: COMPLETE THIS"  # TODO
+        split_request = request.split(" ")
+        return split_request[1]
 
 
     @staticmethod
@@ -85,10 +85,14 @@ class HttpServer():
             # for files that don't exist.
         """
 
+        #Return text/html for any files that do not exist
+        if not os.path.exists(path):
+            return b"text/html"
+
         if path.endswith('/'):
             return b"text/plain"
-        else:
-            return b"TODO: FINISH THE REST OF THESE CASES"  # TODO
+
+        return (mimetypes.guess_type(path))[0]
 
     @staticmethod
     def get_content(path):
