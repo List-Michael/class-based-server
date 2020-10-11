@@ -130,8 +130,6 @@ class HttpServer():
             # so this should raise a FileNotFoundError.
         """
         webroot_path = 'webroot' + path
-        #print (('new webroot path is'))
-        #print(webroot_path)
 
         if not os.path.exists(webroot_path):
             #return b"FileNotFoundError"
